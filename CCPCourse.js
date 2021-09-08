@@ -18,7 +18,7 @@ function loadCCP() {
     //var ccpUrl = "https://londonbootcampnov19test.awsapps.com/connect/ccp#/";
 	//var ccpUrl = "https://londonbootcampnov19test.awsapps.com/connect/ccp#/";
 	//var ccpUrl = "https://abp3jhk.my.connect.aws/ccp-2/";
-    var ccpURL = `https://abp3jhk.awsapps.com/connect/ccp-v2/`;
+    var ccpUrl = "https://abp3jhk.awsapps.com/connect/ccp-v2/";
   
     // Initialize the CCP window
     connect.core.initCCP(container, {
