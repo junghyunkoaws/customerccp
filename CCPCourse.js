@@ -305,19 +305,22 @@ function loadCCP() {
 
     function transferContact() {
     // Streams API call to Transfer to Anthoer
-    var agent = new lily.Agent();
-    agent.connect(connect.Endpoint.byPhoneNumber("+18335972167"), {});
+    
+    var endpoint = connect.Endpoint.byPhoneNumber("+18335972167");
 
-    var endpoint = connect.Endpoint.byPhoneNumber("+1xxxxxxxxxx");
-        agent.getContacts(lily.ContactType.VOICE)[0].addConnection(endpoint, {
-            success: function (data) {
-                alert("transfer success");
-            },
-            failure: function (data) {
-                alert("transfer failed");
-            }
-        });
-
+    agent.getContacts(lily.ContactType.VOICE)[0].addConnection(endpoint, {
+        success: function(data) {
+           alert("transfer success");
+        },
+        failure: function(data) {
+           alert("transfer failed");
+        }
+        
+    });
+    writeLog('agent.toSnapshot() = ' + JSON.stringify(agent.toSnapshot()) + '\n');       
+    
+    var contact = agent.getContacts(lily.ContactType.VOICE)[0]
+    contact.getAgentConnection().destroy();
 }
 
     function makeCall() {
