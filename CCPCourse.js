@@ -48,7 +48,8 @@ function loadCCP() {
         window.myCPP.contact = contact;
         //window 현재 화면, myCPP.contact 데이터를 넣는다.
         console.log(window.myCPP);
-        writeLog('window.myCPP = ' + window.myCPP + '\n');
+        writeLog('window.myCPP = ' + window.myCPP[0] + '\n');
+
         console.log('Subscribing to contact events');
         if (contact.getActiveInitialConnection()
             && contact.getActiveInitialConnection().getEndpoint()) { 
