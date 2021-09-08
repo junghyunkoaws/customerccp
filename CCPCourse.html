@@ -1,0 +1,76 @@
+<html>
+    <head>
+        <title>Custom Agent CCP Console</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta content="utf-8" http-equiv="encoding">
+        <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+        <script type="text/javascript" src="./amazon-connect-chat.js"></script>
+        <script type="text/javascript" src="./connect-streams.js"></script>
+        <script type="text/javascript" src="./CCPCourse.js"></script>
+    </head>    
+	<body>
+        <h2>Custom Contact Control Panel</h2>
+        <div id="ccpContainer" style="width: 320px; min-width: 200px; height: 465px; min-height: 400px;display: none; "></div>
+        <div id="customCCPDiv" style="text-align: center; width: 360px; min-width: 360px; height: 120px; min-height: 120px; border-style: solid; border-color: gray; border-width: thin;">
+          <p style="text-align:center">Agent Controls</p>
+            <!-- custom user experience goes here -->
+            <table style="display: inline-block;">
+                <tbody>
+                  <tr>
+                    <td>
+                        <button type="button" id="setReady" value="SetReady">Set Ready</button>
+                    </td>
+                    <td>
+                        <button type="button" id="setOffline" value="SetOffline">Set Offline</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table style="display: inline-block;">
+                <tbody>
+                  <tr>
+                    <td>
+                        <button type="button" id="ansCall" value="Answer Call">Answer Call</button>
+                    </td>
+                    <td>
+                        <button type="button" id="dropCall" value="Drop Call">Drop Call</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div id="statusDiv">
+                  <div id="agentStatusDiv" style="padding: 5px;">
+                </div>
+            </div>
+        </div>
+        <div id="attributesDiv" style="width: 360px; min-width: 360px; height: 120px; min-height: 120px; border-style: solid; border-color: gray; border-width: thin;">
+          <p style="text-align:center">Contact Attributes</p>
+          <div>
+            <table>
+              <tbody>
+                <tr>
+                  <td>
+                    <label for="firstName" style="width: 128px;">Full Name</label>
+                  </td>
+                  <td>
+                    <input name="firstName" type="text" id="firstName" placeholder="First Name" style="width:129px">
+                  </td>
+                  <td>
+                    <input name="lastName" type="text" id="lastName" placeholder="Last Name" style="width:129px">
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <label for="customerNumber" style="width: 128px;">Phone Number: </label>
+                  </td>
+                  <td>
+                    <input name="customerNumber" type="text" id="customerNumber" placeholder="E.164 Format" style="width:129px">
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          </div>
+          <div id="logDiv"><textarea id="logtextarea" rows="40" cols="140"></textarea></div>
+    </body>
+</html>
