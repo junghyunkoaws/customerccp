@@ -308,7 +308,7 @@ function loadCCP() {
     
     var endpoint = connect.Endpoint.byPhoneNumber("+18335972167");
 
-        agent.getContacts(admin.ContactType.VOICE)[0].addConnection(endpoint, {
+        agent.getContacts(lily.ContactType.VOICE)[0].addConnection(endpoint, {
         success: function(data) {
            alert("transfer success");
         },
@@ -325,7 +325,7 @@ function loadCCP() {
 
     function makeCall() {
         // Streams API call to make a call
-        var agent = new admin.Agent(); 
+        var agent = new lily.Agent(); 
         agent.connect(connect.Endpoint.byPhoneNumber("+19293573151"),{});
         //agent.toSnapshot();
         
