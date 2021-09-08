@@ -20,8 +20,10 @@ function loadCCP() {
     //var ccpUrl = "https://londonbootcampnov19test.awsapps.com/connect/ccp#/";
 	//var ccpUrl = "https://londonbootcampnov19test.awsapps.com/connect/ccp#/";
 	//var ccpUrl = "https://abp3jhk.my.connect.aws/ccp-2/";
-    var ccpUrl = "https://abp3jhk.awsapps.com/connect/ccp-v2/";
+    //var ccpUrl = "https://abp3jhk.awsapps.com/connect/ccp-v2/";
+    var ccpUrl = "https://abp3jhk.my.connect.aws/ccp-v2/";
   
+
     // Initialize the CCP window
     connect.core.initCCP(container, {
         ccpUrl: ccpUrl,        
@@ -303,7 +305,7 @@ function loadCCP() {
         });
     }
 
-    function transferContact(contact) {
+    function transferContact() {
     // Streams API call to Transfer to Anthoer
         var endpoint = connect.Endpoint.byPhoneNumber("+18335972167");
 
