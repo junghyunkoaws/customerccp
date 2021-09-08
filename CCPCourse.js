@@ -11,6 +11,8 @@ function loadCCP() {
     var lastNameField = document.getElementById("lastName");
     var customerNumberField = document.getElementById("customerNumber");
     var logtextarea = document.getElementById("logtextarea");
+    var transferButton = document.getElementById("transfer");
+    var conferenceButton = document.getElementById("conference");
 
     window.myCPP = window.myCPP || {};
 
