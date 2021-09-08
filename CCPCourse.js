@@ -305,6 +305,7 @@ function loadCCP() {
 
     function transferContact() {
     // Streams API call to Transfer to Anthoer
+    var agent = new lily.Agent(); 
     
     var endpoint = connect.Endpoint.byPhoneNumber("+18335972167");
 
