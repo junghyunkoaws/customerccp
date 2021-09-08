@@ -136,6 +136,10 @@ function loadCCP() {
         $("#makeCall").click(() => {
             makeCall();
         });
+        $("#agentsnapshot").click(() => {
+            agentsnapshot();
+        });
+        
        
         
     }
@@ -301,14 +305,8 @@ function loadCCP() {
 
     function transferContact() {
         // Streams API call to Transfer to Anthoer 
-        window.myCPP.contact.accept({
-            success: function () {
-                console.log('Accepted via Streams');
-            },
-            failure: function () {
-                console.log('Failed to establish connection via Streams');
-            }
-        });
+        var agent = new lily.Agent(); 
+        agent.connect(connect.Endpoint.byPhoneNumber("+18335972167"),{}); 
     }
 
     function makeCall() {
@@ -317,6 +315,13 @@ function loadCCP() {
         agent.connect(connect.Endpoint.byPhoneNumber("+19293573151"),{});
         agent.toSnapshot();        
     }
+    function agentsnapshot() {
+        // Streams API call to make a call
+        agent.toSnapshot();
+        console.log(agent.toSnapshot());
+        writeLog('agent.toSnapshot() = ' + agent.toSnapshot() + '\n');
+    }
+    
     
 
     function showAttributes(contact) {
