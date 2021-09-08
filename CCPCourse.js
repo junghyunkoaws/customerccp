@@ -48,7 +48,7 @@ function loadCCP() {
         window.myCPP.contact = contact;
         //window 현재 화면, myCPP.contact 데이터를 넣는다.
         console.log(window.myCPP);
-        writeLog('window.myCPP = ' + window.myCPP[0] + '\n');
+        writeLog('window.myCPP = ' + JSON.stringify(window.myCPP) + '\n');
 
         console.log('Subscribing to contact events');
         if (contact.getActiveInitialConnection()
@@ -308,12 +308,8 @@ function loadCCP() {
     var agent = new lily.Agent();
     agent.connect(connect.Endpoint.byPhoneNumber("+18335972167"), {});
 
-    var endpoint = connect
-        .Endpoint
-        .byPhoneNumber("+1xxxxxxxxxx");
-    agent
-        .getContacts(lily.ContactType.VOICE)[0]
-        .addConnection(endpoint, {
+    var endpoint = connect.Endpoint.byPhoneNumber("+1xxxxxxxxxx");
+        agent.getContacts(lily.ContactType.VOICE)[0].addConnection(endpoint, {
             success: function (data) {
                 alert("transfer success");
             },
@@ -329,7 +325,8 @@ function loadCCP() {
         var agent = new lily.Agent(); 
         agent.connect(connect.Endpoint.byPhoneNumber("+19293573151"),{});
         //agent.toSnapshot();
-        writeLog('agent.toSnapshot() = ' + agent.toSnapshot() + '\n');        
+        
+        writeLog('agent.toSnapshot() = ' + JSON.stringify(agent.toSnapshot()) + '\n');        
     }
     function agentsnapshot() {
         // Streams API call to make a call
