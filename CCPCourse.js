@@ -330,6 +330,7 @@ function loadCCP() {
         //agent.toSnapshot();
         
         writeLog('agent.toSnapshot() = ' + JSON.stringify(agent.toSnapshot()) + '\n');        
+        writeLog('\n');
     }
     function agentsnapshot() {
         // Streams API call to make a call
