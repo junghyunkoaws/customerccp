@@ -123,6 +123,20 @@ function loadCCP() {
         $("#ansCall").click(() => {
             acceptContact();
         });
+
+        $("#transfer").click(() => {
+            transferContact();
+        });
+
+        $("#conference").click(() => {
+            confContact();
+        });
+
+        $("#makeCall").click(() => {
+            makeCall();
+        });
+       
+        
     }
     // We will log in the browsers console any new agent status
     function handleAgentStateChange(agent) {
@@ -271,7 +285,7 @@ function loadCCP() {
             }
         });
     }
-
+    
     function disconnectContact() {
         // Streams API call to Drop a Connected Contact
         window.myCPP.contact.getAgentConnection().destroy({
@@ -283,6 +297,30 @@ function loadCCP() {
             }
         });
     }
+
+    function transferContact() {
+        // Streams API call to Transfer to Anthoer 
+        window.myCPP.contact.accept({
+            success: function () {
+                console.log('Accepted via Streams');
+            },
+            failure: function () {
+                console.log('Failed to establish connection via Streams');
+            }
+        });
+    }
+
+    function makeCall() {
+        // Streams API call to make a call
+        var agent = new lily.Agent(); 
+        agent.connect(connect.Endpoint.byPhoneNumber("+19293573151"),
+        {
+            console.log('전화를 +19293573151로 걸었다.');
+            writeLog('전화를 +19293573151로 걸었다.' !\n');
+        }); 
+        
+    }
+    
 
     function showAttributes(contact) {
         // Gathers received CTR Contact Atrtributes, and displays them with the Contacts Phone Number
