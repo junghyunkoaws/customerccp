@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+    <meta name="theme-color" content="#000000">
+    <title>Amazon Connect Contact Control Panel</title>
+    <script type="text/javascript" src="./amazon-connect-chat.js"></script>
+    <script type="text/javascript" src="./connect-streams.js"></script>
+    <!-- NEW STYLESHEET FOR AGENT TRANSFER DEMO-->
+ 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        window.connect = window.connect || {};
+    </script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.893.0.min.js"></script>
+</head>
+
+<body>
+	<table>
+	<tr>
+	<td>
+    <section id="ccpContainer">
+        <div id="ccpContainer1">
+        </div>
+    </section>
+	</td>
+	<td>
+	
+	
+	<div id="logDiv"><textarea id="logtextarea" rows="40" cols="140"></textarea></div>
+	</td>
+	</tr>
+	</table>
+
+ 
+
+    <div id="root"></div>
+    <script>
+        function getQueryParameters() {
+            var query = window.location.href.split('?')[1];
+            //query won't be set if ? isn't in the URL
+            if (!query) {
+                return {};
+            }
+            var params = query.split('&');
+            var pairs = {};
+            for (var i = 0, len = params.length; i < len; i++) {
+                var pair = params[i].split('=');
+                pairs[pair[0]] = pair[1];
+            }
+            return pairs;
+        }
+
+        //Connect CCP Integration
+        var spanCounter = 0;
+        var container = document.getElementById("ccpContainer");
+        var instanceAlias = 'abp3jhk';
+        var loginURL = `https://abp3jhk.awsapps.com/connect/login`;
+        var logoutURL = `https://abp3jhk.awsapps.com/connect/logout`;
+        var instanceHome = `https://abp3jhk.awsapps.com/connect/home`;
+
+        var loginURL = loginURL;
+        var ccpURL = `https://abp3jhk.awsapps.com/connect/ccp-v2/`;
+        ccpURL = `${ccpURL}softphone`;
+        var agentMetricsURL = `https://abp3jhk.awsapps.com/connect/real-time-metrics?tableType=user`;
+        var loginWindow;
+        window.ccp = window.ccp || {};
+        window.contact = window.contact || {};
+        window.agentConnection = window.agentConnection || {};
+        window.chatTranscript = window.chatTranscript || {};        
+
+        connect.core.initCCP(container, {
+            ccpUrl: ccpURL,
+            loginPopup: true,
+            softphone: {
+                allowFramedSoftphone: true,
+                disableRingtone: false,
+				allowFramedSoftphone: true
+            }
+        });
+		
+		//화면상의 텍스트 영역에 로그 출력하기
+		function writeLog(message) {
+			var logtextarea = document.getElementById('logtextarea');
+			var text = logtextarea.value;
+			logtextarea.value = text + message;
+		};
+
+
+		
+        connect.core.getEventBus().subscribe(connect.EventType.ACK_TIMEOUT, function () {
+            try {
+                connect.getLog().warn("ACK_TIMEOUT occurred, attempting to pop the login page.");
+                var width = 500;
+                var height = 600;
+                var left = (screen.width / 2) - (width / 2);
+                var top = (screen.height / 2) - (height / 2);
+
+                loginWindow = window.open(loginURL, true, "width=" + width + ",height=" + height +
+                    ",menubar=no,status=no,toolbar=no,left=" + left + ",top=" + top);
+            } catch (e) {
+                connect.getLog().error("ACK_TIMEOUT occurred but we are unable to open the login popup." +
+                    e).withException(e);
+            }
+
+            connect.core.getEventBus().subscribe(connect.EventType.ACKNOWLEDGE, function () {
+                console.log("Closing loginwindow");
+                closeLoginWindow(); // maybe comment this out
+            });
+
+        });
+
+        function closeLoginWindow() {
+            loginWindow.close();
+        }
+
+        connect.agent(function(agent) {
+			writeLog('에이전트 이벤트 서브스크라이브（connect.agent）!\n');
+			writeLog('에이전트 기본정보 표시\n');
+
+		//기본정보표시
+			var routingProfile = agent.getRoutingProfile();
+			writeLog('routingProfile.name = ' + routingProfile.name + '\n');
+			writeLog('routingProfile.queues = ' + JSON.stringify(routingProfile.queues) + '\n');
+			writeLog('routingProfile.defaultOutboundQueue = ' + JSON.stringify(routingProfile.defaultOutboundQueue) + '\n');
+
+			var name = agent.getName();
+			writeLog('name = ' + name + '\n');
+			
+			var extension = agent.getExtension();
+			writeLog('extension = ' + extension + '\n');
+
+
+			//에이전트가 접수 가능 이벤트
+			agent.onRoutable(function(agent) {
+				writeLog('에이전트가 접수 가능해졌다（agent.onRoutable）!\n');
+			});
+
+			//에이전트가 접수가 불가능하게 된 이벤트	
+			agent.onNotRoutable(function(agent) {
+				writeLog('에이전트가 접수가 가능하지 않게 되었다. agent.onNotRoutable）!\n');
+			});
+
+			//에이전트가 오프라인으로 된 이벤트
+			agent.onOffline(function(agent) {
+				writeLog('에이전트가 오프라인으로 바뀌었다（agent.onOffline）!\n');
+			});
+
+			//에이전트가 ACW가 된 이벤트
+			agent.onAfterCallWork(function(agent) {
+				writeLog('에이전트가 ACW가 되었다.（agent.onAfterCallWork）!\n');
+			});
+});
+
+
+		//컨택 이벤트 서브스크라이브 설정
+        connect.contact(function (contact) {
+            //c = contact;
+            writeLog('컨택 이벤트 서브스크라이브 (connect.contact) !\n');
+			writeLog('contact.getActiveInitialConnection().getEndpoint().phoneNumber = ' + phoneNumber + '\n');
+
+			//window.contact = c;
+			
+			
+            try {
+                  AWS.config.credentials.get(function (err) {
+                    if (err)
+                      console.log(err);
+                    else {
+                      credentials = AWS.config.credentials;
+                      if (!isChat) {
+                        console.log("kicking off websocket test");
+                        WebSocketTest();
+                        console.log("websocket test success");
+                      }
+                    }
+                  });
+                } catch (e) {
+                  console.log(e);
+            }
+			
+			writeLog('컨택 이벤트 서브스크라이브（connect.contact）!\n' );
+			writeLog('contact.getActiveInitialConnection().getEndpoint().phoneNumber = ' + phoneNumber + '\n');
+			writeLog('contact.getQueue().name = ' + contact.getQueue().name + '\n');
+			writeLog('initialConn.getType() = ' + conn.getType() + '\n');
+			
+            contact.onConnecting(function (contact) {
+                contactID = contact.contactId;
+                previousContactId = contact.getInitialContactId();
+                var attr = contact.getAttributes();
+                var c1 = contact.getConnections()[1];
+                var c2 = contact.getStatus();
+                document.getElementById("phoneNumber").value = c1.getAddress()['phoneNumber'];
+                if (attr.firstName) {
+                    document.getElementById("firstName").value = attr.firstName.value;
+                }
+                if (attr.lastName) {
+                    document.getElementById("lastName").value = attr.lastName.value;
+                }
+            });
+            
+			//콜이 확립된 이벤트
+			contact.onConnected(function (contact) {
+ 				writeLog('콜이 확립되었다. （connect.onConnected）!\n');
+				writeLog('contactId =' + contact.getContactId() + '\n');		
+            });
+			
+			contact.onRefresh(function (contact) {
+                writeLog('콘택트 정보가 새로워졌다（connect.onRefresh）!\n');
+				
+				//컨택의 커넥션을 확인하다
+				var conns = contact.getConnections();
+				writeLog('컨택 커넥션 = ' + JSON.stringify(conns) + '\n');
+				
+				//보류 중인지 아닌지 체크하다
+				var conn = contact.getActiveInitialConnection();
+				if (conn.isOnHold()) {
+					writeLog('보류중입니다!\n');
+				}
+
+            });
+			//전화 벨이 착신한 이벤트
+			contact.onIncoming(function(contact) {
+				writeLog('인바운드 콜이 인입 되었다.（connect.onIncoming）!\n');
+				writeLog('contactId =' + contact.getContactId() + '\n');
+			});
+			
+			//호출에 응답한 이벤트
+			contact.onAccepted(function(contact) {
+				writeLog('콜에 응답했다（connect.onAccepted）!\n');	
+				writeLog('contactId =' + contact.getContactId() + '\n');
+
+			});
+			//콜이 절단된(혹은 절단된) 이벤트
+			contact.onEnded(function(contact) {
+				writeLog('콜이 끊겼다(혹은 절단되었다（connect.onEnded）!\n');	
+				writeLog('contactId =' + contact.getContactId() + '\n');			
+			});
+			
+			
+        });
+        
+    </script>
+    </section>
+</body>
+
+
+</html>
