@@ -313,12 +313,8 @@ function loadCCP() {
     function makeCall() {
         // Streams API call to make a call
         var agent = new lily.Agent(); 
-        agent.connect(connect.Endpoint.byPhoneNumber("+19293573151"),
-        {
-            console.log('전화를 +19293573151로 걸었다.');
-            writeLog('전화를 +19293573151로 걸었다.' !\n');
-        }); 
-        
+        agent.connect(connect.Endpoint.byPhoneNumber("+19293573151"),{});
+        agent.toSnapshot();        
     }
     
 
