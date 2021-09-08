@@ -303,11 +303,11 @@ function loadCCP() {
         });
     }
 
-    function transferContact() {
+    function transferContact(contact) {
     // Streams API call to Transfer to Anthoer
         var endpoint = connect.Endpoint.byPhoneNumber("+18335972167");
 
-        agent.getContacts(lily.ContactType.VOICE)[0].addConnection(endpoint, {
+        agent.getContacts(lily.ContactType.VOICE)[0].addConnection(endpoint[1], {
         success: function(data) {
            alert("transfer success");
         },
