@@ -307,10 +307,10 @@ function loadCCP() {
 
     function transferContact() {
     // Streams API call to Transfer to Anthoer
-        window.myCPP.agent = agent;
+      
         var endpoint = connect.Endpoint.byPhoneNumber("+18335972167");
 
-        agent.getContacts(lily.ContactType.VOICE)[0].addConnection(endpoint[1], {
+        window.myCPP.agent.getContacts(lily.ContactType.VOICE)[0].addConnection(endpoint[1], {
         success: function(data) {
            alert("transfer success");
         },
