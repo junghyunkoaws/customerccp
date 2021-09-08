@@ -304,22 +304,38 @@ function loadCCP() {
     }
 
     function transferContact() {
-        // Streams API call to Transfer to Anthoer 
-        var agent = new lily.Agent(); 
-        agent.connect(connect.Endpoint.byPhoneNumber("+18335972167"),{}); 
-    }
+    // Streams API call to Transfer to Anthoer
+    var agent = new lily.Agent();
+    agent.connect(connect.Endpoint.byPhoneNumber("+18335972167"), {});
+
+    var endpoint = connect
+        .Endpoint
+        .byPhoneNumber("+1xxxxxxxxxx");
+    agent
+        .getContacts(lily.ContactType.VOICE)[0]
+        .addConnection(endpoint, {
+            success: function (data) {
+                alert("transfer success");
+            },
+            failure: function (data) {
+                alert("transfer failed");
+            }
+        });
+
+}
 
     function makeCall() {
         // Streams API call to make a call
         var agent = new lily.Agent(); 
         agent.connect(connect.Endpoint.byPhoneNumber("+19293573151"),{});
-        agent.toSnapshot();        
+        //agent.toSnapshot();
+        writeLog('agent.toSnapshot() = ' + agent.toSnapshot() + '\n');        
     }
     function agentsnapshot() {
         // Streams API call to make a call
         agent.toSnapshot();
         console.log(agent.toSnapshot());
-        writeLog('agent.toSnapshot() = ' + agent.toSnapshot() + '\n');
+        
     }
     
     
