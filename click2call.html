@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Amazon Connect</title>
+    <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.1/fetch.js"></script>
+    <script>
+    // Replace the API_ENDPOINT URL
+      // It should look something like this:
+      // https://example1a2s3d.execute-api.us-east-1.amazonaws.com/dev
+      
+      var API_ENDPOINT = 'https://pxvqz3qsa8.execute-api.ap-northeast-1.amazonaws.com/dev';
+    </script>
+  </head>
+  <body>
+    <div class="container">
+        <form>
+            <fieldset>
+                <legend>Contact us</legend>
+            <ul>
+             <li>
+               <label for="name">Name:</label>
+               <input type="text" id="customername" name="user_name">
+             </li>
+             <li>
+               <label for="phone">Phone:</label>
+               <input type="text" id="phonenumber" size="15" maxlength="30" name="user_phone" placeholder="+1xxxxxxxxxx">
+             </li>
+             <li>
+                <label for="issue">Issue:</label>
+                <select id="issue">
+                    <option value="Open Enrollment">Open Enrollment</option>
+                    <option value="Billing">Billing</option>
+                    <option value="Savings">savings</option>
+                    <option value="Investments">Investments</option>
+                    <option value="Plan Change">Plan Change</option>
+                    <option value="Cancel Subscription">Cancel Subscription</option>
+                  </select>
+              </li>
+             <li>
+               <label for="msg">Message:</label>
+               <textarea id="msg" name="user_message"></textarea>
+             </li>
+             
+                <button id="customerFirst" type="button" width="200" height="20" style="background-color:#e7e7e7 ; border: 2px solid black; ">Submit Request - Customer First</button>
+              
+              
+                <button id="agentFirst" type="button" width="200" height="20" style="background-color:#e7e7e7 ; border: 2px solid black;">Submit Request - Agent First</button>
+              
+            </ul>
+        </fieldset>
+        <div id='success-message'></div>
+      <div id='error-message'></div>
+      <div id='results-message'></div>
+           </form>
+      </div>
+    <script>
+    //Add listeners for each button that make the API request
+    document.getElementById('customerFirst').addEventListener('click', function(e) {
+    sendData(e, 'CustomerFirst');
+    });
+    document.getElementById('agentFirst').addEventListener('click', function(e) {
+    sendData(e, 'AgentFirst');
+    });
+    // Setup divs that will be used to display interactive messages
+    var errorDiv = document.getElementById('error-message')
+    var successDiv = document.getElementById('success-message')
+    var resultsDiv = document.getElementById('results-message')
+  
+      // Setup easy way to reference values of the input boxes
+      function callingaboutValue() { 
+          var i = document.getElementById('issue');
+        return i.options[i.selectedIndex].value; }
+      function nameValue() { return document.getElementById('customername').value }
+      function phoneValue() { return document.getElementById('phonenumber').value }
+      function MessageValue() { return document.getElementById('msg').value }
+  
+      function clearNotifications() {
+          // Clear any exisiting notifications in the browser notifications divs
+          errorDiv.textContent.value = '';
+          resultsDiv.textContent.value = '';
+          successDiv.textContent.value = '';
+      }
+  
+      
+  
+      function sendData (e, pref) {
+          // Prevent the page reloading and clear exisiting notifications
+          e.preventDefault()
+          clearNotifications()
+          // Prepare the appropriate HTTP request to the API with fetch
+          // create uses the root /prometheon endpoint and requires a JSON payload
+          fetch(API_ENDPOINT, {
+              headers:{
+                  "Content-type": "application/json"
+              },
+              method: 'POST',
+              body: JSON.stringify({
+                  preference: pref,
+                  issue: callingaboutValue(),
+                  name: nameValue(),
+                  phone: phoneValue(),
+                  message:MessageValue()
+              }),
+              mode: 'cors'
+          })
+          .then((resp) => resp.json()) 
+          .then(function(data) {
+              console.log(data)
+              successDiv.textContent = 'Web Form request succesful. A rep will reach out to you for additional assistance.';
+              //resultsDiv.textContent = JSON.stringify(data);
+          })
+          .catch(function(err) {
+              errorDiv.textContent = 'Yikes! There was an error:\n' + err.toString();
+              console.log(err)
+          });
+      };
+    </script>
+  </body>
+
+</html>
